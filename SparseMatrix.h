@@ -2,7 +2,7 @@
 #define _SPARSEMATRIX_H
 #include "Int64Hash.h"
 
-/* 2!3! = 12$B=E$K(Bcount$B$9$k$O$:!#(B*/
+/* 2!3! = 12重にcountするはず。*/
 
 typedef struct
 {

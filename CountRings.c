@@ -25,27 +25,27 @@ int tmpmain(void) {
         if (!CheckBonds(bond,bond_n))
             {fprintf(stderr,"Data error!\n"); exit(1);}
 
-        /* °÷´Ä¹½Â¤¤ÎÃµº÷(£³ÅÀ¸ÇÄê¡¢½ÅÊ£¤¢¤ê) */
+        /* å“¡ç’°æ§‹é€ ã®æ¢ç´¢(ï¼“ç‚¹å›ºå®šã€é‡è¤‡ã‚ã‚Š) */
         ring_n = CountRings(ring,RINGMAX,bond,bond_n,path,MAXRINGSIZE-1);
         //fprintf(stderr,"ring_n=%d  \n",ring_n);
 
-        /* ½ÅÊ£¤Î½üµî */
+        /* é‡è¤‡ã®é™¤å» */
         ring_n = SimplifyRings(ring,ring_n);
         //fprintf(stderr,"ring_n=%d  \n",ring_n);
 
-        /* °÷´Ä¿ô¤´¤È¤Î¥«¥¦¥ó¥È */
+        /* å“¡ç’°æ•°ã”ã¨ã®ã‚«ã‚¦ãƒ³ãƒˆ */
         for (i = 0; i < MAXRINGSIZE; i++)
             count[i] = 0;
         for (i = 0; i < ring_n; i++)
             count[ring[i].n-1]++;
 
-        /* ½ĞÎÏ */
+        /* å‡ºåŠ› */
         for (i = 3; i < MAXRINGSIZE; i++)
             printf(" %4d",count[i-1]);
         printf("\n");
     }
 
-    /* ½ªÎ» */
+    /* çµ‚äº† */
     for (i = 0; i < NMAX; i++)
         free(path[i]);
     free(path);
@@ -57,7 +57,8 @@ int tmpmain(void) {
 
 
 
-int BondType_CountRings( int bond_n, BondType* bond, int maxRingSize, int* count )
+void
+BondType_CountRings( int bond_n, BondType* bond, int maxRingSize, int* count )
 {
     RingType *ring;
     int **path;
@@ -76,15 +77,15 @@ int BondType_CountRings( int bond_n, BondType* bond, int maxRingSize, int* count
         fprintf(stderr,"Data error!\n"); exit(1);
     }
 
-    /* °÷´Ä¹½Â¤¤ÎÃµº÷(£³ÅÀ¸ÇÄê¡¢½ÅÊ£¤¢¤ê) */
+    /* å“¡ç’°æ§‹é€ ã®æ¢ç´¢(ï¼“ç‚¹å›ºå®šã€é‡è¤‡ã‚ã‚Š) */
     ring_n = CountRings(ring,RINGMAX,bond,bond_n,path, maxRingSize );
     //fprintf(stderr,"ring_n=%d  \n",ring_n);
     
-    /* ½ÅÊ£¤Î½üµî */
+    /* é‡è¤‡ã®é™¤å» */
     ring_n = SimplifyRings(ring,ring_n);
     //fprintf(stderr,"ring_n=%d  \n",ring_n);
 
-    /* °÷´Ä¿ô¤´¤È¤Î¥«¥¦¥ó¥È */
+    /* å“¡ç’°æ•°ã”ã¨ã®ã‚«ã‚¦ãƒ³ãƒˆ */
     for (i = 0; i <= maxRingSize; i++)
         count[i] = 0;
     for (i = 0; i < ring_n; i++){
@@ -93,7 +94,7 @@ int BondType_CountRings( int bond_n, BondType* bond, int maxRingSize, int* count
     }
     //printf( "\n" );
 
-    /* ½ªÎ» */
+    /* çµ‚äº† */
     for (i = 0; i < NMAX; i++)
         free(path[i]);
     free(path);
@@ -103,7 +104,7 @@ int BondType_CountRings( int bond_n, BondType* bond, int maxRingSize, int* count
 
 
 
-/* Æ±°ì¹½Â¤¤ò½üµî */
+/* åŒä¸€æ§‹é€ ã‚’é™¤å» */
 int SimplifyRings(RingType *ring,int ring_n) {
     int i,j,n;
 
@@ -122,7 +123,7 @@ int SimplifyRings(RingType *ring,int ring_n) {
     return n+1;
 }
 
-/* °÷´Ä¾ğÊó¤òÈæ³Ó¤¹¤ë(qsort()ÍÑ´Ø¿ô) */
+/* å“¡ç’°æƒ…å ±ã‚’æ¯”è¼ƒã™ã‚‹(qsort()ç”¨é–¢æ•°) */
 int RingCompare(const void *e1,const void *e2) {
     RingType *r1,*r2;
     int i,ret;
@@ -145,9 +146,9 @@ int RingCompare(const void *e1,const void *e2) {
     return ret;
 }
 
-/* £î°÷´Ä¤Î¿ô¤¨¾å¤²(ÊÖÃÍ¤Ï°÷´Ä¤ÎÁí¿ô¡¢°Û¾ï¤ÏÉé¤òÊÖ¤¹¡£) */
-int _crbuf_p[MAXRINGSIZE]; /* Î³»ÒÈÖ¹æÉ½ */
-int _crbuf_b[MAXRINGSIZE]; /* ·ë¹çÈÖ¹æÉ½ */
+/* ï½å“¡ç’°ã®æ•°ãˆä¸Šã’(è¿”å€¤ã¯å“¡ç’°ã®ç·æ•°ã€ç•°å¸¸ã¯è² ã‚’è¿”ã™ã€‚) */
+int _crbuf_p[MAXRINGSIZE]; /* ç²’å­ç•ªå·è¡¨ */
+int _crbuf_b[MAXRINGSIZE]; /* çµåˆç•ªå·è¡¨ */
 int _CountRings(RingType *ring,int max,BondType *bond,int **path, int maxRingSize ) {
     int ring_n = 0;
     int n,k,flag,*p;
@@ -155,7 +156,7 @@ int _CountRings(RingType *ring,int max,BondType *bond,int **path, int maxRingSiz
 
     flag = 1;
     for (n = 4; n <= maxRingSize && ring_n <= 0 && flag; n++) {
-        /* n°÷´Ä¤ÎÃµº÷ */
+        /* nå“¡ç’°ã®æ¢ç´¢ */
         _crbuf_b[2] = 0;
         i = 3;
         flag = 0;
@@ -163,7 +164,7 @@ int _CountRings(RingType *ring,int max,BondType *bond,int **path, int maxRingSiz
             if (i >= n) {
                 flag = 1;
                 if (path[_crbuf_p[0]][_crbuf_p[n-1]] == 1) {
-                    /* n°÷´Ä¤òÈ¯¸«¡¢ÅĞÏ¿ */
+                    /* nå“¡ç’°ã‚’ç™ºè¦‹ã€ç™»éŒ² */
                     if (ring_n < max) {
                         ring[ring_n].n = n;
                         k = 0;
@@ -179,46 +180,46 @@ int _CountRings(RingType *ring,int max,BondType *bond,int **path, int maxRingSiz
                         }
                         ring_n++;
                     } else
-                        return -1; /* ÅĞÏ¿ÉÔÇ½¡¢°Û¾ï½ªÎ» */
+                        return -1; /* ç™»éŒ²ä¸èƒ½ã€ç•°å¸¸çµ‚äº† */
                 }
             } else {
                 if (_crbuf_b[i-1] < bond[_crbuf_p[i-1]].n) {
                     _crbuf_p[i] = bond[_crbuf_p[i-1]].to[_crbuf_b[i-1]];
-                    /* Î³»Ò´Öµ÷Î¥¤ÎÈ½Äê */
+                    /* ç²’å­é–“è·é›¢ã®åˆ¤å®š */
                     p = path[_crbuf_p[i]];
                     for (j = 0; j < i-1
                                    && p[_crbuf_p[j]] >= _crmin(i-j,n-i+j); j++)
                         ;
                     if (j >= i-1) {
-                        /* ºÎÂò¡££±¤Ä²¼¤¬¤ë */
+                        /* æ¡æŠã€‚ï¼‘ã¤ä¸‹ãŒã‚‹ */
                         _crbuf_b[i++] = 0;
                     } else {
-                        /* ´şµÑ¡£¼¡¤ò»î¤¹ */
+                        /* æ£„å´ã€‚æ¬¡ã‚’è©¦ã™ */
                         _crbuf_b[i-1]++;
                     }
                     continue;
                 }
             }
-            /* £±¤Ä¾å¤¬¤ë */
+            /* ï¼‘ã¤ä¸ŠãŒã‚‹ */
             i--;
-            _crbuf_b[i-1]++; /* ºÇ¸å¤Ë_crbuf_b[1]++¤ò¤·¤Æ¤·¤Ş¤¦¤¬ÌäÂê¤Ê¤· */
+            _crbuf_b[i-1]++; /* æœ€å¾Œã«_crbuf_b[1]++ã‚’ã—ã¦ã—ã¾ã†ãŒå•é¡Œãªã— */
         }
     }
 
     return ring_n;
 }
 
-/* Á´°÷´Ä¿ô¤Î¿ô¤¨¾å¤²(ÊÖÃÍ¤Ï°÷´Ä¤ÎÁí¿ô¡¢°Û¾ï¤ÏÉé¤òÊÖ¤¹¡£) */
+/* å…¨å“¡ç’°æ•°ã®æ•°ãˆä¸Šã’(è¿”å€¤ã¯å“¡ç’°ã®ç·æ•°ã€ç•°å¸¸ã¯è² ã‚’è¿”ã™ã€‚) */
 int CountRings(RingType *ring,int max,BondType *bond,int bond_n,int **path, int maxRingSize ) {
     int p0,p1,p2,b0,b1,b2;
     int ring_n = 0;
     int ret;
     int i,j;
 
-    /* ³ÆÎ³»Ò´Ö¤ÎºÇ¾®µ÷Î¥¤òµá¤á¤ë */
+    /* å„ç²’å­é–“ã®æœ€å°è·é›¢ã‚’æ±‚ã‚ã‚‹ */
     MinPath(path,bond,bond_n);
 
-    /* ¥á¥¤¥ó¥ë¡¼¥× */
+    /* ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ— */
     for (p0 = 0; p0 < bond_n; p0++) {
         for (b0 = 0; b0 < bond[p0].n; b0++) {
             p1 = bond[p0].to[b0];
@@ -226,7 +227,7 @@ int CountRings(RingType *ring,int max,BondType *bond,int bond_n,int **path, int 
                 p2 = bond[p1].to[b1];
                 if (p0 >= p2) continue;
                 if (path[p0][p2] == 1) {
-                    /* £³°÷´ÄÈ¯¸«¡¢ÅĞÏ¿ */
+                    /* ï¼“å“¡ç’°ç™ºè¦‹ã€ç™»éŒ² */
                     if (p0 < p1 && p1 < p2) {
                         if (ring_n < max) {
                             ring[ring_n].n = 3;
@@ -235,10 +236,10 @@ int CountRings(RingType *ring,int max,BondType *bond,int bond_n,int **path, int 
                             ring[ring_n].list[2] = p2;
                             ring_n++;
                         } else
-                            return -1; /* ÅĞÏ¿ÉÔÇ½¡¢°Û¾ï½ªÎ» */
+                            return -1; /* ç™»éŒ²ä¸èƒ½ã€ç•°å¸¸çµ‚äº† */
                     }
                 } else {
-                    /* £î°÷´ÄÃµº÷(£î¡ä£³) */
+                    /* ï½å“¡ç’°æ¢ç´¢(ï½ï¼ï¼“) */
                     _crbuf_p[0] = p0;
                     _crbuf_p[1] = p1;
                     _crbuf_p[2] = p2;
@@ -249,7 +250,7 @@ int CountRings(RingType *ring,int max,BondType *bond,int bond_n,int **path, int 
                     if (ret >= 0)
                         ring_n += ret;
                     else
-                        return -1; /* ÅĞÏ¿ÉÔÇ½¡¢°Û¾ï½ªÎ» */
+                        return -1; /* ç™»éŒ²ä¸èƒ½ã€ç•°å¸¸çµ‚äº† */
                 }
             }
         }
@@ -258,17 +259,17 @@ int CountRings(RingType *ring,int max,BondType *bond,int bond_n,int **path, int 
     return ring_n;
 }
 
-/* path[i][j]¤Ëi¡Áj¤Ø¤ÎºÇÃ»Ï©¤Îµ÷Î¥¤òµá¤á¤ë */
+/* path[i][j]ã«iã€œjã¸ã®æœ€çŸ­è·¯ã®è·é›¢ã‚’æ±‚ã‚ã‚‹ */
 void MinPath(int **path,BondType *bond,int bond_n) {
     int work[NMAX];
     int head,tail;
     int *p;
     int i,j,k,to,length;
 
-    /* ½é´ü²½ */
+    /* åˆæœŸåŒ– */
     for (i = 0; i < bond_n; i++)
         for (j = 0; j < bond_n; j++)
-            path[i][j] = bond_n; /* Ì¤·×»»¤Î°ÕÌ£ */
+            path[i][j] = bond_n; /* æœªè¨ˆç®—ã®æ„å‘³ */
 
     for (i = 0; i < bond_n; i++) {
         p = path[i];
@@ -282,7 +283,7 @@ void MinPath(int **path,BondType *bond,int bond_n) {
             for (j = 0; j < bond[k].n; j++) {
                 to = bond[k].to[j];
                 if (p[to] >= bond_n) {
-                    /* ¿·µ¬ÅĞÏ¿ */
+                    /* æ–°è¦ç™»éŒ² */
                     work[tail++] = to;
                 }
                 if (p[to] > length)
@@ -292,7 +293,7 @@ void MinPath(int **path,BondType *bond,int bond_n) {
     }
 }
 
-/*  ÁŞÆş¥½¡¼¥È  */
+/*  æŒ¿å…¥ã‚½ãƒ¼ãƒˆ  */
 void _insertsort(int n,int *a) {
     int i,j;
     int x;
@@ -305,22 +306,22 @@ void _insertsort(int n,int *a) {
     }
 }
 
-/* Í­¸ş¥°¥é¥Õ¤ÎÆÉ¤ß¹ş¤ß(ÊÖÃÍ¤ÏÎ³»Ò¿ô¡¢¼ºÇÔ¤ÏÉé¡£) */
+/* æœ‰å‘ã‚°ãƒ©ãƒ•ã®èª­ã¿è¾¼ã¿(è¿”å€¤ã¯ç²’å­æ•°ã€å¤±æ•—ã¯è² ã€‚) */
 int ReadBonds(BondType *bond,int max,FILE *fp) {
     char str[NMAX+1];
     int n;
     int i,j;
 
-    /* ½é´ü²½ */
+    /* åˆæœŸåŒ– */
     for (i = 0; i < max; i++)
         bond[i].n = 0;
 
-    /* ÆÉ¤ß¹ş¤ß */
+    /* èª­ã¿è¾¼ã¿ */
     n = max;
-    for (i = 0; i < n && fgets(str,NMAX+1,fp) != NULL; i++) {
-        for (j = 0; j < n && (str[j] == '0' || str[j] == '1'); j++) {
+    for (i = 0; (i < n) && (fgets(str,NMAX+1,fp) != NULL); i++) {
+      for (j = 0; (j < n) && ((str[j] == '0') || (str[j] == '1')); j++) {
             if (j != i && str[j] == '1') {
-                if (bond[i].n >= MAXBOND || bond[j].n >= MAXBOND)
+	      if ((bond[i].n >= MAXBOND) || (bond[j].n >= MAXBOND))
                     {fprintf(stderr,"%d: Too many bonds.\n",i); return -1;}
                 bond[i].to[bond[i].n++] = j;
                 bond[j].to[bond[j].n++] = i;
@@ -328,17 +329,17 @@ int ReadBonds(BondType *bond,int max,FILE *fp) {
         }
         if (i == 0) n = j;
     }
-    if (i < n || fgets(str,NMAX+1,fp) != NULL && *str != '\0' && *str != '\n')
+    if ((i < n) || ((fgets(str,NMAX+1,fp) != NULL) && (*str != '\0') && (*str != '\n')))
         return -1;
 
-    /* ¥½¡¼¥È */
+    /* ã‚½ãƒ¼ãƒˆ */
     for (i = 0; i < n; i++)
         _insertsort(bond[i].n, bond[i].to);
 
     return n;
 }
 
-/* ¥Ç¡¼¥¿¤ÎÀ°¹çÀ­È½Äê */
+/* ãƒ‡ãƒ¼ã‚¿ã®æ•´åˆæ€§åˆ¤å®š */
 int CheckBonds(BondType *bond,int bond_n) {
     int i,j,k;
     int to;
@@ -346,7 +347,7 @@ int CheckBonds(BondType *bond,int bond_n) {
     for (i = 0; i < bond_n; i++) {
         for (j = 0; j < bond[i].n; j++) {
 	  to = bond[i].to[j];
-	  if (to < 0 || to >= bond_n || (j > 0 && to <= bond[i].to[j-1])) {
+	  if ((to < 0) || (to >= bond_n) || ((j > 0) && (to <= bond[i].to[j-1]))) {
 	    fprintf(stderr,"%2d,%2d: Illegal bond %d found(1).\n",i,j,to);
 	    return 0;
 	  }
@@ -366,20 +367,20 @@ void HeapError(void) {
 }
 
 
-/*°Ê¾å¤ÏÇÏ¾ì·¯(¡©)¤¬ºî¤Ã¤¿»»Äø·²¡£´ğËÜÅª¤Ê¥¢¥ë¥´¥ê¥º¥à¤Ï¤³¤ì¤Ç¤¤¤¤¤Î¤À
-  ¤¬¡¢µğÂç¤Ê¥·¥¹¥Æ¥à¤Î¾ì¹ç¡¢´°Á´¤Êpath[i][j]¤òºîÀ®¤¹¤ë¤Î¤ÏÈó¾ï¤ËÏ²Èñ¤Ê
-  ¤Î¤Ç¡¢¤Ê¤ó¤È¤«´ÊÌó¤·¤¿¤¤¡£Îã¤¨¤Ğ¡¢6°÷´Ä¤Ş¤Ç¤òÃÎ¤ê¤¿¤¤¾ì¹ç¡¢µ÷Î¥¤Ï3¤Ş
-  ¤Ç¤Ç½½Ê¬¡£Ç¤°Õ¤ËÍ¿¤¨¤é¤ì¤¿2ÅÀ´Ö¤Îµ÷Î¥¤¬Â¨ºÂ¤Ë·×»»¤Ç¤­¤ì¤Ğ¡¢path[][]
-  ¤ÏÉ¬Í×¤Ê¤¤¡£hashÉ½¤Ç²ò·è¤Ç¤­¤ë¤«¤â¡£
+/*ä»¥ä¸Šã¯é¦¬å ´å›(ï¼Ÿ)ãŒä½œã£ãŸç®—ç¨‹ç¾¤ã€‚åŸºæœ¬çš„ãªã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã¯ã“ã‚Œã§ã„ã„ã®ã 
+  ãŒã€å·¨å¤§ãªã‚·ã‚¹ãƒ†ãƒ ã®å ´åˆã€å®Œå…¨ãªpath[i][j]ã‚’ä½œæˆã™ã‚‹ã®ã¯éå¸¸ã«æµªè²»ãª
+  ã®ã§ã€ãªã‚“ã¨ã‹ç°¡ç´„ã—ãŸã„ã€‚ä¾‹ãˆã°ã€6å“¡ç’°ã¾ã§ã‚’çŸ¥ã‚ŠãŸã„å ´åˆã€è·é›¢ã¯3ã¾
+  ã§ã§ååˆ†ã€‚ä»»æ„ã«ä¸ãˆã‚‰ã‚ŒãŸ2ç‚¹é–“ã®è·é›¢ãŒå³åº§ã«è¨ˆç®—ã§ãã‚Œã°ã€path[][]
+  ã¯å¿…è¦ãªã„ã€‚hashè¡¨ã§è§£æ±ºã§ãã‚‹ã‹ã‚‚ã€‚
 
-¼ş´ü¶­³¦¤ò²£ÃÇ¤¹¤ë¤è¤¦¤Ê´Ä¤¬¤Ç¤­¤ë¥±¡¼¥¹¤¬¤¢¤ë¡£xyÌÌ¡¢yzÌÌ¡¢zxÌÌ¤òÊÕ¤¬
-¸òº¹¤·¤¿²ó¿ô¤ò¥«¥¦¥ó¥È¤·¤Æ¤ª¤±¤Ğ¡¢¤½¤Î¤è¤¦¤Ê´Ä¤ò(ºÂÉ¸¤Î¾ğÊó¤Ê¤·¤Ç)½ü¤¯
-¤³¤È¤¬¤Ç¤­¤ë¤Ï¤º¡£*/
-
-
-/*µ÷Î¥4°Ê²¼¤ÎÅÀ¤ò¥ê¥¹¥È¥¢¥Ã¥×¤¹¤ë¡£µ÷Î¥1¤ÎÅÀÂĞ¤Ï¤¢¤é¤«¤¸¤á
-  RegisterDistance¤ÇÅĞÏ¿¤·¤Æ¤¢¤ë¤â¤Î¤È¤¹¤ë¡£Ìµ¸ş¥°¥é¥Õ¤Ê¤é¡¢i->j¤Èj->i
-  ¤ÎÎ¾Êı¤¬½ñ¤«¤ì¤Æ¤¤¤Ê¤±¤ì¤Ğ¤Ê¤é¤Ê¤¤¡£*/
+å‘¨æœŸå¢ƒç•Œã‚’æ¨ªæ–­ã™ã‚‹ã‚ˆã†ãªç’°ãŒã§ãã‚‹ã‚±ãƒ¼ã‚¹ãŒã‚ã‚‹ã€‚xyé¢ã€yzé¢ã€zxé¢ã‚’è¾ºãŒ
+äº¤å·®ã—ãŸå›æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã—ã¦ãŠã‘ã°ã€ãã®ã‚ˆã†ãªç’°ã‚’(åº§æ¨™ã®æƒ…å ±ãªã—ã§)é™¤ã
+ã“ã¨ãŒã§ãã‚‹ã¯ãšã€‚*/
 
 
-/*¤É¤¦¤»¤³¤ì¤Ï¤½¤Î¤Ş¤Ş»È¤¦¤³¤È¤Ï¤Ç¤­¤Ê¤¤¤¾¡£*/
+/*è·é›¢4ä»¥ä¸‹ã®ç‚¹ã‚’ãƒªã‚¹ãƒˆã‚¢ãƒƒãƒ—ã™ã‚‹ã€‚è·é›¢1ã®ç‚¹å¯¾ã¯ã‚ã‚‰ã‹ã˜ã‚
+  RegisterDistanceã§ç™»éŒ²ã—ã¦ã‚ã‚‹ã‚‚ã®ã¨ã™ã‚‹ã€‚ç„¡å‘ã‚°ãƒ©ãƒ•ãªã‚‰ã€i->jã¨j->i
+  ã®ä¸¡æ–¹ãŒæ›¸ã‹ã‚Œã¦ã„ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚*/
+
+
+/*ã©ã†ã›ã“ã‚Œã¯ãã®ã¾ã¾ä½¿ã†ã“ã¨ã¯ã§ããªã„ãã€‚*/

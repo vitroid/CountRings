@@ -16,9 +16,9 @@
 #include <string.h>
 #include "SparseMatrix.h"
 
-/*$BMWAG(B(i,j)$B$K(Bvalue$B$rEPO?$9$k!#(Bvalue$B$,(B0$B$N>l9g!"K\Mh$J$i(BHash$B$+$i%G!<%?$r>C$7!"NY(B
-  $B@\>pJs$+$i$b=|$+$J$1$l$P$$$1$J$$$,!"<B:]E*$JI,MW$,@8$8$F$$$J$$$N$G!"(B
-  $B$3$3$G$O(Bvalue$B$,(B0$B$N%1!<%9$O9M$($F$$$J$$!#(B*/
+/*要素(i,j)にvalueを登録する。valueが0の場合、本来ならHashからデータを消し、隣
+  接情報からも除かなければいけないが、実際的な必要が生じていないので、
+  ここではvalueが0のケースは考えていない。*/
 void SparseMatrix_RegisterValue(sSparseMatrix *path,int i,int j,int value)
 {
   int k;
@@ -38,7 +38,7 @@ void SparseMatrix_RegisterValue(sSparseMatrix *path,int i,int j,int value)
 }
 
 
-/*$BMWAG(B(i,j)$B$NCM$rJV$9!#(B*/
+/*要素(i,j)の値を返す。*/
 int SparseMatrix_QueryValue(sSparseMatrix *path,int i,int j)
 {
   return Int64Hash_QueryValue(path->ih,(u_int64_t)i*(u_int64_t)path->ncolumn+(u_int64_t)j);
@@ -51,7 +51,7 @@ void _sp_hasherror()
 }
 
 
-/*$B6uABBP>N9TNs$N=i4|2=(B*/
+/*空疎対称行列の初期化*/
 sSparseMatrix *SparseMatrix_Init(int nline,int ncolumn,int hashbit,int maxadj)
 {
   int i;
@@ -75,7 +75,7 @@ sSparseMatrix *SparseMatrix_Init(int nline,int ncolumn,int hashbit,int maxadj)
   return path;
 }
 
-/*$B6uABBP>N9TNs$N(Bdestructor*/
+/*空疎対称行列のdestructor*/
 void SparseMatrix_Done(sSparseMatrix *path)
 {
   int i;
@@ -91,23 +91,23 @@ void SparseMatrix_Done(sSparseMatrix *path)
   free(path);
 }
 
-/* $B6uABBP>N9TNs$NFI$_9~$_(B */
+/* 空疎対称行列の読み込み */
 sSparseMatrix *SparseMatrix_LoadSSMX(FILE *fp,int hashbit,int maxadj) {
   int n;
   char buf[256];
   sSparseMatrix *path;
-  /*SSMX$B7A<0$rA[Dj!#(B1$B9TL\$O@aE@$N?t(B*/
+  /*SSMX形式を想定。1行目は節点の数*/
   fgets(buf,sizeof(buf),fp);
   n=atoi(buf);
-  /*$B=i4|2=(B*/
+  /*初期化*/
   path=SparseMatrix_Init(n,n,hashbit,maxadj);
-  /*$BNY@\4X78$NFI$_$3$_!#(B*/
+  /*隣接関係の読みこみ。*/
   while(NULL!=fgets(buf,sizeof(buf),fp)){
     int i,j,v;
     sscanf(buf,"%d %d %d",&i,&j,&v);
     /**/
     if(i<0)break;
-    /*$BL58~%0%i%U$H$7$F$"$D$+$&!#(B*/
+    /*無向グラフとしてあつかう。*/
     SparseMatrix_RegisterValue(path,i,j,v);
     if(i!=j)
       SparseMatrix_RegisterValue(path,j,i,v);
@@ -115,23 +115,23 @@ sSparseMatrix *SparseMatrix_LoadSSMX(FILE *fp,int hashbit,int maxadj) {
   return path;
 }
 
-/* $BFsCM6uABBP>N9TNs$NFI$_9~$_(B */
+/* 二値空疎対称行列の読み込み */
 sSparseMatrix *SparseMatrix_LoadNGPH(FILE *fp,int hashbit,int maxadj) {
   int n;
   char buf[256];
   sSparseMatrix *path;
-  /*NGPH$B7A<0$rA[Dj!#(B1$B9TL\$O@aE@$N?t(B*/
+  /*NGPH形式を想定。1行目は節点の数*/
   fgets(buf,sizeof(buf),fp);
   n=atoi(buf);
-  /*$B=i4|2=(B*/
+  /*初期化*/
   path=SparseMatrix_Init(n,n,hashbit,maxadj);
-  /*$BNY@\4X78$NFI$_$3$_!#(B*/
+  /*隣接関係の読みこみ。*/
   while(NULL!=fgets(buf,sizeof(buf),fp)){
     int i,j,v;
     sscanf(buf,"%d %d",&i,&j);
     /**/
     if(i<0)break;
-    /*$BL58~%0%i%U$H$7$F$"$D$+$&!#(B*/
+    /*無向グラフとしてあつかう。*/
     SparseMatrix_RegisterValue(path,i,j,1);
     if(i!=j)
       SparseMatrix_RegisterValue(path,j,i,1);
@@ -139,39 +139,39 @@ sSparseMatrix *SparseMatrix_LoadNGPH(FILE *fp,int hashbit,int maxadj) {
   return path;
 }
 
-/* $BFsCM6uABHsBP>N9TNs$NFI$_9~$_(B */
+/* 二値空疎非対称行列の読み込み */
 sSparseMatrix *SparseMatrix_LoadAsymNGPH(FILE *fp,int hashbit,int maxadj) {
   int n;
   char buf[256];
   sSparseMatrix *path;
-  /*NGPH$B7A<0$rA[Dj!#(B1$B9TL\$O@aE@$N?t(B*/
+  /*NGPH形式を想定。1行目は節点の数*/
   fgets(buf,sizeof(buf),fp);
   n=atoi(buf);
-  /*$B=i4|2=(B*/
+  /*初期化*/
   path=SparseMatrix_Init(n,n,hashbit,maxadj);
-  /*$BNY@\4X78$NFI$_$3$_!#(B*/
+  /*隣接関係の読みこみ。*/
   while(NULL!=fgets(buf,sizeof(buf),fp)){
     int i,j,v;
     sscanf(buf,"%d %d",&i,&j);
     /**/
     if(i<0)break;
-    /*$BL58~%0%i%U$H$7$F$"$D$+$&!#(B*/
+    /*無向グラフとしてあつかう。*/
     SparseMatrix_RegisterValue(path,i,j,1);
   }
   return path;
 }
 
-/* $BFsCMBP>N9TNs$NFI$_9~$_(B */
+/* 二値対称行列の読み込み */
 sSparseMatrix *SparseMatrix_LoadGRPH(FILE *fp,int hashbit,int maxadj) {
   int n,i,j;
   char buf[10000];
   sSparseMatrix *path;
-  /*GRPH$B7A<0$rA[Dj!#(B1$B9TL\$O@aE@$N?t(B*/
+  /*GRPH形式を想定。1行目は節点の数*/
   fgets(buf,sizeof(buf),fp);
   n=atoi(buf);
-  /*$B=i4|2=(B*/
+  /*初期化*/
   path=SparseMatrix_Init(n,n,hashbit,maxadj);
-  /*$BNY@\4X78$NFI$_$3$_!#(B*/
+  /*隣接関係の読みこみ。*/
   for(i=0;i<n;i++){
     if(NULL==fgets(buf,sizeof(buf),fp)){
       SparseMatrix_Done(path);
@@ -187,17 +187,17 @@ sSparseMatrix *SparseMatrix_LoadGRPH(FILE *fp,int hashbit,int maxadj) {
   return path;
 }
 
-/* $BFsCMHsBP>N9TNs$NFI$_9~$_(B */
+/* 二値非対称行列の読み込み */
 sSparseMatrix *SparseMatrix_LoadAsymGRPH(FILE *fp,int hashbit,int maxadj) {
   int n,i,j;
   char buf[10000];
   sSparseMatrix *path;
-  /*GRPH$B7A<0$rA[Dj!#(B1$B9TL\$O@aE@$N?t(B*/
+  /*GRPH形式を想定。1行目は節点の数*/
   fgets(buf,sizeof(buf),fp);
   n=atoi(buf);
-  /*$B=i4|2=(B*/
+  /*初期化*/
   path=SparseMatrix_Init(n,n,hashbit,maxadj);
-  /*$BNY@\4X78$NFI$_$3$_!#(B*/
+  /*隣接関係の読みこみ。*/
   for(i=0;i<n;i++){
     if(NULL==fgets(buf,sizeof(buf),fp)){
       SparseMatrix_Done(path);
@@ -211,7 +211,7 @@ sSparseMatrix *SparseMatrix_LoadAsymGRPH(FILE *fp,int hashbit,int maxadj) {
   return path;
 }
 
-/* $B=PNO!#(B($B3NG'MQ(B) */
+/* 出力。(確認用) */
 void SparseMatrix_SaveSMTX(FILE *fp,sSparseMatrix *path) {
   int n;
   char buf[256];

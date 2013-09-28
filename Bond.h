@@ -5,7 +5,7 @@
 typedef struct {
     int n;
     int to[MAXBOND];
-    char flag[MAXBOND]; /* ¤³¤Î¥×¥í¥°¥é¥à¤Ç¤Ï»È¤ï¤Ê¤¤¡£ */
+    char flag[MAXBOND]; /* ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã§ã¯ä½¿ã‚ãªã„ã€‚ */
 } BondType;
 
 #endif

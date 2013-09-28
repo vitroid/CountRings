@@ -1,4 +1,4 @@
-/* �ͥåȥ���ΰ��Ĺ�¤�����ץ������ Ver. 0.70 */
+/* ネットワークの員環構造を求めるプログラム Ver. 0.70 */
 /*$Id: countrings2.c,v 1.2 2007/09/20 09:45:39 matto Exp $
   $Log: countrings2.c,v $
   Revision 1.2  2007/09/20 09:45:39  matto
@@ -19,14 +19,15 @@
   Count rings in the network and find out order parameters.
 
   
-  ����ʥ����ƥ���б��Ǥ���褦�˾��ܤ��ѹ���Ԥä���
-  ʿ������ǯ�����(��)IntHash��SparseMatrix����Ѥ��ƴ��ǲ����褦��
+  巨大なシステムに対応できるように松本が変更を行った。
+  平成１１年４月９日(金)IntHashとSparseMatrixを使用して簡素化しよう。
 
-  ʿ������ǯ�������(��)�դˡ������ʷϤ�6���Ĥ�������Ƥ��ޤ����꤬
-  �ĤäƤ��롣�ĤϺ�ɸ�˴ط��ʤ��ȥݥ��������������������ΤǤ��ꡢ
-  ��ɸ�ˤ������ϳ����ץ������ǹԤä��ۤ������ä��ꤹ��Ȼפ���*/
-#include<stdio.h>
-#include<stdlib.h>
+  平成１１年７月２２日(木)逆に、小さな系で6員環が一周してしまう問題が
+  残っている。環は座標に関係なくトポロジーだけで定義されるものであり、
+  座標による制約は外部プログラムで行ったほうがすっきりすると思う。*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "SparseMatrix_CountRings.h"
 
 void usage(char *cmd)
@@ -91,18 +92,18 @@ int main(int argc,char *argv[]) {
     while(NULL!=fgets(buf,sizeof(buf),stdin)){
       sSparseMatrix *path=NULL;
       if(0==strncmp(buf,"@NGPH",5)){
-	/*maxadj�Ͽ�ξ�磱�����ǽ�ʬ��hashbit��log2(100*γ�ҿ�*2) ��
-	  ���20���餤��ɬ�פ��⡣*/
+	/*maxadjは水の場合１００で十分。hashbitはlog2(100*粒子数*2) 最
+	  大で20ぐらいは必要かも。*/
 	path=SparseMatrix_LoadNGPH(stdin,24,1000);
       }else if(0==strncmp(buf,"@GRPH",5)){
-	/*maxadj�Ͽ�ξ�磱�����ǽ�ʬ��hashbit��log2(100*γ�ҿ�*2) ��
-	  ���20���餤��ɬ�פ��⡣*/
+	/*maxadjは水の場合１００で十分。hashbitはlog2(100*粒子数*2) 最
+	  大で20ぐらいは必要かも。*/
 	path=SparseMatrix_LoadGRPH(stdin,24,1000);
       }
       if(path!=NULL){
 	int bond_n;
 	BondType *bond;
-	/*BondType����ϡ�SparseMatrix������Ф��롣*/
+	/*BondType情報は、SparseMatrixから抽出する。*/
 	if ((bond = (BondType *) malloc(sizeof(BondType)*path->nline)) == NULL)
 	  HeapError();
 	bond_n=SetBonds(path,bond);
@@ -110,13 +111,13 @@ int main(int argc,char *argv[]) {
         if (!CheckBonds(bond,bond_n))
             {fprintf(stderr,"Data error!\n"); exit(1);}
 
-	/* ���Ĺ�¤��õ��(�������ꡢ��ʣ����) */
+	/* 員環構造の探索(３点固定、重複あり) */
 	ring_n = CountRings2(ring,RINGMAX,bond,bond_n,path,maxsize);
 	
-	/* ��ʣ�ν��� */
+	/* 重複の除去 */
 	ring_n = SimplifyRings(ring,ring_n);
 	
-	/* ���� */
+	/* 出力 */
 	if(count){
 	  for(i=3;i<=maxsize;i++){
 	    output[i]=0;
@@ -163,7 +164,7 @@ int main(int argc,char *argv[]) {
 	    }
 	}
 	
-	/* ��λ */
+	/* 終了 */
 	free(bond);
 	SparseMatrix_Done(path);
       }

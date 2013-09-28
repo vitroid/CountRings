@@ -1,11 +1,11 @@
-/*$B@0?t(B(0$B$r4^$^$J$$(B)$B$rMWAG$H$9$k(BHash$B!#(B*/
+/*整数(0を含まない)を要素とするHash。*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "Int64Hash.h"
 #define EMPTY -1
 
-/*shift$B$H(Bxor$B$K$h$k4JC1$J(Bhash key$B$N@8@.(B*/
+/*shiftとxorによる簡単なhash keyの生成*/
 u_int64_t _Int64Hash_Encode(sInt64Hash *s, u_int64_t key)
 {
     u_int64_t mod=0;
@@ -17,7 +17,7 @@ u_int64_t _Int64Hash_Encode(sInt64Hash *s, u_int64_t key)
     return mod;
 }
 
-/*hash$BMWAG$NHV9f$rJV$9!#$b$7B8:_$7$J$$MWAG$J$i!"6u$-MWAG$rJV$9!#MWAG$ODI2C$5$l$J$$!#(B*/
+/*hash要素の番号を返す。もし存在しない要素なら、空き要素を返す。要素は追加されない。*/
 u_int64_t _Int64Hash_QueryElement(sInt64Hash *ih, u_int64_t key)
 {
   u_int64_t e=_Int64Hash_Encode(ih,key);
@@ -35,7 +35,7 @@ u_int64_t _Int64Hash_QueryElement(sInt64Hash *ih, u_int64_t key)
   }
 }
 
-/*$BCM$rEPO?$9$k!#99?7$J$i(B0$B!"DI2C$J$i(B1$B$rJV$9!#(B*/
+/*値を登録する。更新なら0、追加なら1を返す。*/
 int Int64Hash_RegisterValue(sInt64Hash *ih, u_int64_t key,int value)
 {
     u_int64_t e=_Int64Hash_QueryElement(ih,key);
@@ -55,13 +55,13 @@ int Int64Hash_RegisterValue(sInt64Hash *ih, u_int64_t key,int value)
     return (v==0);
 }
 
-/*$BCM$r;2>H$9$k!#(B*/
+/*値を参照する。*/
 int Int64Hash_QueryValue(sInt64Hash *ih,u_int64_t key)
 {
   return ih->value[_Int64Hash_QueryElement(ih,key)];
 }
 
-/*$BCM$rKu>C$9$k!#(B*/
+/*値を抹消する。*/
 void Int64Hash_EraseOne(sInt64Hash *ih,u_int64_t key)
 {
   ih->key[_Int64Hash_QueryElement(ih,key)]=EMPTY;
