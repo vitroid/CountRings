@@ -9,3 +9,5 @@ countrings2: $(OBJS)
 	$(CC) $^ -o countrings2 $(LDFLAGS)
 clean:
 	-rm $(OBJS)
+archive: clean
+	cd ..; tar zcvf CountRings.tar.gz CountRings/*
