@@ -1,7 +1,11 @@
 #!/usr/bin/env python
+#To confirm that countrings2 is working correctly.
+#I doubted the bug in countrings2, but seems alright (See README).
+
+#Ok, I confirmed that the results of 2 and 3 are the same.
+#Use countrings2 because this is slower.
 
 import sys
-import re
 import heapq
 
 def flatten(L):       # Flatten linked list of form [0,[1,[2,[]]]]
@@ -121,17 +125,28 @@ def saveRNGS( nmol, rings ):
     return s
 
 
-maxsize = 8
-if sys.argv[1] != "":
-	maxsize = int(sys.argv[1])
-file = sys.stdin
-while True:
-    line = file.readline()
-    if not line:
-        break
-    if line[0:5] == "@NGPH":
-        (nmol,network) = readNGPH(file)
-        #print shortest_path(network, 0,3)
-        rings = totalrings( network, maxsize )
-        print saveRNGS( nmol, rings ),
+if __name__ == "__main__":
+    maxsize = 8
+    countonly = 0
+    if len(sys.argv) > 0:
+        if sys.argv[1] == "-c":
+            countonly = 1
+        sys.argv.remove( sys.argv[0] )
+        maxsize = int(sys.argv[1])
+    file = sys.stdin
+    while True:
+        line = file.readline()
+        if not line:
+            break
+        if line[0:5] == "@NGPH":
+            (nmol,network) = readNGPH(file)
+            #print shortest_path(network, 0,3)
+            rings = totalrings( network, maxsize )
+            if countonly:
+                count = [0] * (maxsize-2)
+                for i in rings.values():
+                    count[len(i)-3]+=1
+                print " ".join( map(str,count) )
+            else:
+                print saveRNGS( nmol, rings ),
 
