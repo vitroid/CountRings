@@ -5,6 +5,7 @@
 #Ok, I confirmed that the results of 2 and 3 are the same.
 #Use countrings2 because this is slower.
 
+from __future__ import print_function
 import sys
 import heapq
 
@@ -25,7 +26,7 @@ def shortest_path(G, start, end):
             if v1 == end:
                 return list(flatten(path))[::-1] + [v1]
             path = (v1, path)
-            for (v2, cost2) in G[v1].iteritems():
+            for (v2, cost2) in G[v1].items():
                 if v2 not in visited:
                     heapq.heappush(q, (cost + cost2, v2, path))
 
@@ -38,22 +39,20 @@ def readNGPH(file):
     line = file.readline()
     #print line,
     n = int(line)
-    pattern = re.compile(' +')
     network = dict()
     while True:
         line = file.readline()
-        xyz = pattern.split(line.strip())
+        xyz = line.split()
         #print xyz
-        xyz = map(int,xyz)
-        if xyz[0] < 0:
+        i,j = map(int,xyz[:2])
+        if i < 0:
             return (n,network)
-        #print xyz[0],xyz[1]
-        if not network.has_key(xyz[0]):
-            network[xyz[0]] = dict()
-        if not network.has_key(xyz[1]):
-            network[xyz[1]] = dict()
-        network[xyz[0]][xyz[1]] = 1
-        network[xyz[1]][xyz[0]] = 1
+        if  i not in network:
+            network[i] = dict()
+        if j not in network:
+            network[j] = dict()
+        network[i][j] = 1
+        network[j][i] = 1
 
 
 def shortcuts( network, members ):
@@ -128,10 +127,10 @@ def saveRNGS( nmol, rings ):
 if __name__ == "__main__":
     maxsize = 8
     countonly = 0
-    if len(sys.argv) > 0:
+    if len(sys.argv) > 1:
         if sys.argv[1] == "-c":
             countonly = 1
-        sys.argv.remove( sys.argv[0] )
+            sys.argv.pop( 1 )
         maxsize = int(sys.argv[1])
     file = sys.stdin
     while True:
@@ -146,7 +145,7 @@ if __name__ == "__main__":
                 count = [0] * (maxsize-2)
                 for i in rings.values():
                     count[len(i)-3]+=1
-                print " ".join( map(str,count) )
+                print (" ".join( map(str,count) ))
             else:
-                print saveRNGS( nmol, rings ),
+                print (saveRNGS( nmol, rings ),end="")
 
