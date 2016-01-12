@@ -54,3 +54,6 @@ While, there is another sample containing crossing rings but still undistorted.
 <img src="sample3.png" />
 ##Wayarounds
 The small Perl program “crossingrings.pl” looks up all the crossing rings in the ring list (in <a href="http://theochem.chem.okayama-u.ac.jp/wiki/wiki.cgi/matto?page=%40RNGS">@RNGS</a> format) and remove one of them randomly until the crossing is avoided. With the use of 3-dimentional geometrical information, there might be better walkarounds.
+##Note
+This program is developed for analysing the hydrogen bond network of water.
+An affordable and relevant definition of the hydogen bonds is discussed <a href="http://theochem.chem.okayama-u.ac.jp/wiki/wiki.cgi/matto?page=Relevance+of+Hydrogen+Bond+Definition">here</a>.
