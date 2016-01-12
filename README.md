@@ -16,10 +16,10 @@
 1. (Optional) Remove "crossing rings".
 
 ##Usage
-Input data must be in @NGPH format. Output data will be in @RNGS format.
+Input data must be in @NGPH format. Output data will be in <a href="rngs.md">@RNGS</a> format.
 
-    % ./countrings3.py 8 < test.ngph > test.rngs
-    % ./countrings3.py 8 < test.ngph | ./crossingrings.pl > test2.rngs
+    % ./countrings.py 8 < test.ngph > test.rngs
+    % ./countrings.py 8 < test.ngph | ./crossingrings.pl > test2.rngs
 
 ##Sample
 The following is the expression of a cubic graph, which should have six 4-cycles.
@@ -44,10 +44,10 @@ You can pick up many samples at the Vitrite database:
     http://vitrite.chem.okayama-u.ac.jp
 ##Known Problems
 ###Sample 1
-<img src="sample1.png" />
+<img src="sample1.png" /><br />
 Number of rings in this kind of graph consisting of N bows is counted as N (N-1) / 2. It happens because of the lack of 3-dimentional geometrical information.
 ###Sample 2
-<img src="sample2.png" />
+<img src="sample2.png" /><br />
  It is a smaller version of sample 1 consisting of 4 bows. As you see, surface rings of this structure seems to be 4, while the algorithm counts as 6, because it also counts the “crossing rings” (diagonal red and blue rings). These sample topologies rarely appear in the network of water at low temperature because the z-index at the top and bottom nodes is too large. 
 While, there is another sample containing crossing rings but still undistorted.
 ###Sample 3
