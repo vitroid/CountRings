@@ -14,6 +14,7 @@ def flatten(L):       # Flatten linked list of form [0,[1,[2,[]]]]
 		yield L[0]
 		L = L[1]
 
+        
 #http://code.activestate.com/recipes/119466/
 def shortest_path(G, start, end):
 
@@ -30,9 +31,9 @@ def shortest_path(G, start, end):
                 if v2 not in visited:
                     heapq.heappush(q, (cost + cost2, v2, path))
 
-#test
-#G = {'s':{'u':10, 'x':5}, 'u':{'v':1, 'x':2}, 'v':{'y':4}, 'x':{'u':3, 'v':9, 'y':2}, 'y':{'s':7, 'v':6}}
-#print shortest_path(G, 's','v')
+def test_for_shortest_path():
+    G = {'s':{'u':10, 'x':5}, 'u':{'v':1, 'x':2}, 'v':{'y':4}, 'x':{'u':3, 'v':9, 'y':2}, 'y':{'s':7, 'v':6}}
+    print(shortest_path(G, 's','v'))
 
 
 def readNGPH(file):
