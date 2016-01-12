@@ -9,7 +9,7 @@
 
 1. Choose 3 successive nodes along the network.
 1. Find the smallest rings passing the three nodes.
-1. The ring must not have shotcuts, i.e. path connecting two vertices on the ring which is shorter than the 1. 1. path along the ring. (Using Dijkstra's algorithm.)
+1. The ring must not have shotcuts, i.e. path connecting two vertices on the ring which is shorter than the path along the ring. (Using Dijkstra's algorithm.)
 1. Put the ring in the list.
 1. Repeat 1 .. 4 until all sets of 3 successive nodes are tested.
 1. Eliminate the permutations of a ring in the list.
