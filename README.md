@@ -48,6 +48,7 @@ Number of rings in this kind of graph consisting of N bows is counted as N (N-1)
 ###Sample 2
 It is a smaller version of sample 1 consisting of 4 bows. As you see, surface rings of this structure seems to be 4, while the algorithm counts as 6, because it also counts the “crossing rings” (diagonal red and blue rings). These sample topologies rarely appear in the network of water at low temperature because the z-index at the top and bottom nodes is too large. 
 While, there is another sample containing crossing rings but still undistorted.
-Sample 3
+###Sample 3
+<img src="CountRings/sample1.png" />
 ##Wayarounds
 The small Perl program “crossingrings.pl” looks up all the crossing rings in the ring list (in @RNGS format) and remove one of them randomly until the crossing is avoided. With the use of 3-dimentional geometrical information, there might be better walkarounds.
