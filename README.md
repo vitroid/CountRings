@@ -41,7 +41,7 @@ The following is the expression of a cubic graph, which should have six 4-cycles
     -1 -1
 
 You can pick up many samples at the Vitrite database:
-    http://vitrite.chem.okayama-u.ac.jp
+    http://reg.chem.okayama-u.ac.jp/cgi-bin/vitrite.cgi
 ##Known Problems
 ###Sample 1
 <img src="sample1.png" /><br />
