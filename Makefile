@@ -1,13 +1,22 @@
-#include ../Makefile.settings
-BINTARGET=countrings2
-TARGET=$(BINTARGET)
-OBJS=countrings2.o SparseMatrix.o Int64Hash.o CountRings.o SparseMatrix_CountRings.o
-CFLAGS=-Werror
+all:
+	echo Hello.
+%: temp_%
+	countrings -h | python3 util/replace.py %%usage%% "    " $< > $@
+%.rst: %.md
+	md2rst $<
 
-all: $(BINTARGET)
-countrings2: $(OBJS)
-	$(CC) $^ -o countrings2 $(LDFLAGS)
-clean:
-	-rm $(OBJS)
-archive: clean
-	cd ..; tar zcvf CountRings.tar.gz CountRings/*
+install:
+	make README.rst
+	./setup.py install
+pypi:
+	make README.rst
+	./setup.py check
+	./setup.py sdist bdist_wheel upload
+distclean:
+	-rm -rf build dist
+	-rm -rf GenIce.egg-info
+	-rm README.rst
+	-rm .DS_Store
+	find . -name __pycache__ | xargs rm -rf 
+	find . -name \*.pyc      | xargs rm -rf
+	find . -name \*~         | xargs rm -rf

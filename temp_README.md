@@ -16,7 +16,7 @@
 1. (Optional) Remove "crossing rings".
 
 ##Usage
-    
+%%usage%%
 
 Input data must be in <a href="http://theochem.chem.okayama-u.ac.jp/wiki/wiki.cgi/matto?page=%40NGPH">@NGPH</a> format. Output data will be in <a href="http://theochem.chem.okayama-u.ac.jp/wiki/wiki.cgi/matto?page=%40RNGS">@RNGS</a> format.
 
