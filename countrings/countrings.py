@@ -7,6 +7,7 @@
 
 from __future__ import print_function
 import heapq
+import logging
 
 def flatten(L):       # Flatten linked list of form [0,[1,[2,[]]]]
 	while len(L) > 0:
@@ -92,6 +93,7 @@ def findring( network, members, max ):
     return (max, results)
 
 def totalrings( network, maxsize ):
+    logger = logging.getLogger()
     rings = dict()
     for x in network.keys():
         keys = network[x].keys()
@@ -112,6 +114,8 @@ def totalrings( network, maxsize ):
                             j = tuple(j)
                             #put sorted members as the key,
                             #and original list as the value.
+                            if j not in rings:
+                                logger.debug("({0}) {1}".format(len(i),i))
                             rings[j] = i
     return rings
 
