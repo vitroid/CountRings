@@ -4,7 +4,7 @@
 
 void HeapError(void);
 
-#define MAXRINGSIZE 11
+#define MAXRINGSIZE 13
 typedef struct {
     int n;
     int list[MAXRINGSIZE];
@@ -18,7 +18,7 @@ int  SimplifyRings(RingType *ring,int ring_n);
 int  RingCompare(const void *e1,const void *e2);
 
 #define NMAX 4097
-#define RINGMAX 180000
+#define RINGMAX 1800000
 
 #define _crmin(x,y) (((x)<(y))?(x):(y))
 
