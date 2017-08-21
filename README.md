@@ -57,3 +57,7 @@ The small Perl program “crossingrings.pl” looks up all the crossing rings in
 ## Note
 This program is developed for analysing the hydrogen bond network of water.
 An affordable and relevant definition of the hydogen bonds is discussed <a href="http://theochem.chem.okayama-u.ac.jp/wiki/wiki.cgi/matto?page=Relevance+of+Hydrogen+Bond+Definition">here</a>.
+
+## To Cite It
+
+* M. Matsumoto, A. Baba, and I. Ohmine, Topological building blocks of hydrogen bond network in water, J. Chem. Phys. 127, 134504 (2007); doi:10.1063/1.2772627
