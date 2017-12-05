@@ -9,27 +9,23 @@ import heapq
 import logging
 from collections import defaultdict
 
-def flatten(L):       # Flatten linked list of form [0,[1,[2,[]]]]
-	while len(L) > 0:
-		yield L[0]
-		L = L[1]
-
         
 #http://code.activestate.com/recipes/119466/
 def shortest_path(G, start, end):
 
-    q = [(0, start, ())]  # Heap of (cost, path_head, path_rest).
+    q = [(0, start, [])]  # Heap of (cost, path_head, path_rest).
     visited = set()       # Visited vertices.
     while True:
         (cost, v1, path) = heapq.heappop(q)
         if v1 not in visited:
             visited.add(v1)
             if v1 == end:
-                return list(flatten(path))[::-1] + [v1]
-            path = (v1, path)
+                return path + [v1]
+            path.append(v1)
             for v2 in G[v1]:
                 if v2 not in visited:
                     heapq.heappush(q, (cost + 1, v2, path))
+
 
 def readNGPH(file):
     line = file.readline()
@@ -54,7 +50,8 @@ def shortcuts( network, members ):
             d = min(j-i, n-(j-i))
             path = len(shortest_path(network, members[i],members[j]))-1
             if path < d:
-                return 1
+                return True
+    return False
 
 
 def findring( network, members, max ):
@@ -124,3 +121,16 @@ def saveRNGS( nmol, ri ):  #ri is a rings_iter
     return s
 
 
+if __name__ == "__main__":
+    edges = {"A": ("B","D"),
+             "B": ("C","D","E"),
+             "C": ("E",),
+             "D": ("E","F"),
+             "E": ("F","G"),
+             "F": ("G",)}
+
+    print(edges)
+    print("A -> E:")
+    print(shortest_path(edges, "A", "E"))
+    print("F -> G:")
+    print(shortest_path(edges, "F", "G"))
