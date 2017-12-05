@@ -7,6 +7,7 @@
 
 import heapq
 import logging
+from collections import defaultdict
 
 def flatten(L):       # Flatten linked list of form [0,[1,[2,[]]]]
 	while len(L) > 0:
@@ -26,20 +27,15 @@ def shortest_path(G, start, end):
             if v1 == end:
                 return list(flatten(path))[::-1] + [v1]
             path = (v1, path)
-            for (v2, cost2) in G[v1].items():
+            for v2 in G[v1]:
                 if v2 not in visited:
-                    heapq.heappush(q, (cost + cost2, v2, path))
-
-def test_for_shortest_path():
-    G = {'s':{'u':10, 'x':5}, 'u':{'v':1, 'x':2}, 'v':{'y':4}, 'x':{'u':3, 'v':9, 'y':2}, 'y':{'s':7, 'v':6}}
-    print(shortest_path(G, 's','v'))
-
+                    heapq.heappush(q, (cost + 1, v2, path))
 
 def readNGPH(file):
     line = file.readline()
     #print line,
     n = int(line)
-    network = dict()
+    network = defaultdict(set)
     while True:
         line = file.readline()
         xyz = line.split()
@@ -47,12 +43,8 @@ def readNGPH(file):
         i,j = map(int,xyz[:2])
         if i < 0:
             return (n,network)
-        if  i not in network:
-            network[i] = dict()
-        if j not in network:
-            network[j] = dict()
-        network[i][j] = 1
-        network[j][i] = 1
+        network[i].add(j)
+        network[j].add(i)
 
 
 def shortcuts( network, members ):
@@ -72,7 +64,7 @@ def findring( network, members, max ):
     s = set(members)
     last = members[-1]
     results = []
-    for adj in network[last].keys():
+    for adj in network[last]:
         if adj in s:
             if adj == members[0]:
                 #Ring is closed.
@@ -95,10 +87,10 @@ def rings_iter( network, maxsize ):
     logger = logging.getLogger()
     rings = dict()
     for x in network.keys():
-        keys = network[x].keys()
-        if keys != None:
-            for y in keys:
-                for z in keys:
+        neis = network[x]
+        if neis != None:
+            for y in neis:
+                for z in neis:
                     if y < z:
                     #print x,y,z
                         members = [y,x,z]
