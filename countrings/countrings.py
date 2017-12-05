@@ -83,41 +83,34 @@ def findring( network, members, max ):
                 results += newres
     return (max, results)
 
+
 def rings_iter( network, maxsize ):
     logger = logging.getLogger()
-    rings = dict()
+    rings = set()
     for x in network.keys():
         neis = network[x]
         if neis != None:
             for y in neis:
                 for z in neis:
                     if y < z:
-                    #print x,y,z
                         members = [y,x,z]
                         (max, results) = findring( network, members, maxsize )
                         for i in results:
-                            #to remove permutations
-                            #make a copy of the list
-                            j = list(i)
-                            #sort
-                            j.sort()
-                            #fix in tuple to use as the key.
-                            j = tuple(j)
-                            #put sorted members as the key,
+                            #Make i immutable for the key.
+                            j = frozenset(i)
                             #and original list as the value.
                             if j not in rings:
                                 logger.debug("({0}) {1}".format(len(i),i))
                                 yield i
-                            rings[j] = i
-
+                                rings.add(j)
 
 
 def totalrings( network, maxsize ):
     logger = logging.getLogger()
-    logger.info("totalring() is outdated. Use rings_iter.")
+    logger.info("totalrings() is outdated. Use rings_iter.")
     rings = dict()
     for ring in rings_iter( network, maxsize ):
-        s = tuple(sorted(ring))
+        s = frozenset(ring)
         rings[s] = ring
     return rings
         
