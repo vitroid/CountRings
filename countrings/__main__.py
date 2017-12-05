@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 from countrings import countrings as cr
 import sys
@@ -47,14 +47,14 @@ def main():
         if line[0:5] == "@NGPH":
             (nmol,network) = cr.readNGPH(file)
             #print shortest_path(network, 0,3)
-            rings = cr.totalrings( network, options.maxsize )
+            ri = cr.rings_iter( network, options.maxsize )
             if options.countonly:
-                count = [0] * (maxsize-2)
-                for i in rings.values():
-                    count[len(i)-3]+=1
-                print (" ".join( map(str,count) ))
+                count = [0] * (options.maxsize-2)
+                for ring in ri:
+                    count[len(ring)-3]+=1
+                print (" ".join([str(x) for x in count]) )
             else:
-                print (cr.saveRNGS( nmol, rings ),end="")
+                print (cr.saveRNGS( nmol, ri ),end="")
 
 if __name__ == "__main__":
     main()

@@ -5,7 +5,6 @@
 #Ok, I confirmed that the results of 2 and 3 are the same.
 #Use countrings2 because this is slower.
 
-from __future__ import print_function
 import heapq
 import logging
 
@@ -92,7 +91,7 @@ def findring( network, members, max ):
                 results += newres
     return (max, results)
 
-def totalrings( network, maxsize ):
+def rings_iter( network, maxsize ):
     logger = logging.getLogger()
     rings = dict()
     for x in network.keys():
@@ -116,14 +115,26 @@ def totalrings( network, maxsize ):
                             #and original list as the value.
                             if j not in rings:
                                 logger.debug("({0}) {1}".format(len(i),i))
+                                yield i
                             rings[j] = i
-    return rings
 
-def saveRNGS( nmol, rings ):
+
+
+def totalrings( network, maxsize ):
+    logger = logging.getLogger()
+    logger.info("totalring() is outdated. Use rings_iter.")
+    rings = dict()
+    for ring in rings_iter( network, maxsize ):
+        s = tuple(sorted(ring))
+        rings[s] = ring
+    return rings
+        
+
+def saveRNGS( nmol, ri ):  #ri is a rings_iter
     s = "@RNGS\n"
     s += "%d\n" % nmol
-    for i in rings.values():
-        s+= "%s " % len(i) + " ".join( map(str,i) ) + "\n"
+    for ring in ri:
+        s+= "%s " % len(ring) + " ".join( map(str,ring) ) + "\n"
     s += "0\n"
     return s
 
