@@ -5,42 +5,33 @@
 #Ok, I confirmed that the results of 2 and 3 are the same.
 #Use countrings2 because this is slower.
 
-from __future__ import print_function
 import heapq
 import logging
-
-def flatten(L):       # Flatten linked list of form [0,[1,[2,[]]]]
-	while len(L) > 0:
-		yield L[0]
-		L = L[1]
+from collections import defaultdict
 
         
 #http://code.activestate.com/recipes/119466/
 def shortest_path(G, start, end):
 
-    q = [(0, start, ())]  # Heap of (cost, path_head, path_rest).
+    q = [(0, start, [])]  # Heap of (cost, path_head, path_rest).
     visited = set()       # Visited vertices.
     while True:
         (cost, v1, path) = heapq.heappop(q)
         if v1 not in visited:
             visited.add(v1)
             if v1 == end:
-                return list(flatten(path))[::-1] + [v1]
-            path = (v1, path)
-            for (v2, cost2) in G[v1].items():
+                return path + [v1]
+            path.append(v1)
+            for v2 in G[v1]:
                 if v2 not in visited:
-                    heapq.heappush(q, (cost + cost2, v2, path))
-
-def test_for_shortest_path():
-    G = {'s':{'u':10, 'x':5}, 'u':{'v':1, 'x':2}, 'v':{'y':4}, 'x':{'u':3, 'v':9, 'y':2}, 'y':{'s':7, 'v':6}}
-    print(shortest_path(G, 's','v'))
+                    heapq.heappush(q, (cost + 1, v2, path))
 
 
 def readNGPH(file):
     line = file.readline()
     #print line,
     n = int(line)
-    network = dict()
+    network = defaultdict(set)
     while True:
         line = file.readline()
         xyz = line.split()
@@ -48,12 +39,8 @@ def readNGPH(file):
         i,j = map(int,xyz[:2])
         if i < 0:
             return (n,network)
-        if  i not in network:
-            network[i] = dict()
-        if j not in network:
-            network[j] = dict()
-        network[i][j] = 1
-        network[j][i] = 1
+        network[i].add(j)
+        network[j].add(i)
 
 
 def shortcuts( network, members ):
@@ -63,7 +50,8 @@ def shortcuts( network, members ):
             d = min(j-i, n-(j-i))
             path = len(shortest_path(network, members[i],members[j]))-1
             if path < d:
-                return 1
+                return True
+    return False
 
 
 def findring( network, members, max ):
@@ -73,7 +61,7 @@ def findring( network, members, max ):
     s = set(members)
     last = members[-1]
     results = []
-    for adj in network[last].keys():
+    for adj in network[last]:
         if adj in s:
             if adj == members[0]:
                 #Ring is closed.
@@ -92,39 +80,57 @@ def findring( network, members, max ):
                 results += newres
     return (max, results)
 
-def totalrings( network, maxsize ):
+
+def rings_iter( network, maxsize ):
     logger = logging.getLogger()
-    rings = dict()
+    rings = set()
     for x in network.keys():
-        keys = network[x].keys()
-        if keys != None:
-            for y in keys:
-                for z in keys:
+        neis = network[x]
+        if neis != None:
+            for y in neis:
+                for z in neis:
                     if y < z:
-                    #print x,y,z
                         members = [y,x,z]
                         (max, results) = findring( network, members, maxsize )
                         for i in results:
-                            #to remove permutations
-                            #make a copy of the list
-                            j = list(i)
-                            #sort
-                            j.sort()
-                            #fix in tuple to use as the key.
-                            j = tuple(j)
-                            #put sorted members as the key,
+                            #Make i immutable for the key.
+                            j = frozenset(i)
                             #and original list as the value.
                             if j not in rings:
                                 logger.debug("({0}) {1}".format(len(i),i))
-                            rings[j] = i
-    return rings
+                                yield i
+                                rings.add(j)
 
-def saveRNGS( nmol, rings ):
+
+def totalrings( network, maxsize ):
+    logger = logging.getLogger()
+    logger.info("totalrings() is outdated. Use rings_iter.")
+    rings = dict()
+    for ring in rings_iter( network, maxsize ):
+        s = frozenset(ring)
+        rings[s] = ring
+    return rings
+        
+
+def saveRNGS( nmol, ri ):  #ri is a rings_iter
     s = "@RNGS\n"
     s += "%d\n" % nmol
-    for i in rings.values():
-        s+= "%s " % len(i) + " ".join( map(str,i) ) + "\n"
+    for ring in ri:
+        s+= "%s " % len(ring) + " ".join( map(str,ring) ) + "\n"
     s += "0\n"
     return s
 
 
+if __name__ == "__main__":
+    edges = {"A": ("B","D"),
+             "B": ("C","D","E"),
+             "C": ("E",),
+             "D": ("E","F"),
+             "E": ("F","G"),
+             "F": ("G",)}
+
+    print(edges)
+    print("A -> E:")
+    print(shortest_path(edges, "A", "E"))
+    print("F -> G:")
+    print(shortest_path(edges, "F", "G"))
