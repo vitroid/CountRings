@@ -49,7 +49,7 @@ def main():
             #print shortest_path(network, 0,3)
             rings = cr.totalrings( network, options.maxsize )
             if options.countonly:
-                count = [0] * (maxsize-2)
+                count = [0] * (options.maxsize-2)
                 for i in rings.values():
                     count[len(i)-3]+=1
                 print (" ".join( map(str,count) ))
