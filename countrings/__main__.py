@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from countrings import countrings as cr
+from countrings import countrings_nx as cr
 import sys
 import argparse as ap
 import logging
