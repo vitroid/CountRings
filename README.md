@@ -16,7 +16,21 @@
 1. Eliminate the permutations of a ring in the list.
 1. (Optional) Remove "crossing rings".
 
+This definition would be equivalent to [Marians1990].
+
 ## Usage
+
+    usage: countrings [-h] [--count] [--debug] [--quiet] [maxsize]
+    
+    positional arguments:
+      maxsize      Maximum size of the ringd
+    
+    optional arguments:
+      -h, --help   show this help message and exit
+      --count, -c  Only output the ring statistics.
+      --debug, -D  Output debugging info.
+      --quiet, -q  Do not output progress messages.
+
 
 Input data must be in <a href="http://theochem.chem.okayama-u.ac.jp/wiki/wiki.cgi/matto?page=%40NGPH">@NGPH</a> format. Output data will be in <a href="http://theochem.chem.okayama-u.ac.jp/wiki/wiki.cgi/matto?page=%40RNGS">@RNGS</a> format.
 
@@ -75,3 +89,8 @@ An affordable and relevant definition of the hydogen bonds is discussed <a href=
 ## To Cite It
 
 * M. Matsumoto, A. Baba, and I. Ohmine, Topological building blocks of hydrogen bond network in water, J. Chem. Phys. 127, 134504 (2007); [doi:10.1063/1.2772627](http://dx.doi.org/doi:10.1063/1.2772627)
+
+## References
+
+* Downs, G. M., Gillet, V. J., Holliday, J. D. & Lynch, M. F. Review of ring perception algorithms for chemical graphs. J. Chem. Inf. Comput. Sci. 29, 172–187 (1989).
+* Marians, C. S. & Hobbs, L. W. Network properties of crystalline polymorphs of silica. J. Non-Cryst. Solids. 124, 242–253 (1990).
