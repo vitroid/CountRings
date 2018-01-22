@@ -8,6 +8,7 @@
 import logging
 import networkx as nx
 import itertools
+from functools import lru_cache
 
 
 
@@ -36,14 +37,10 @@ class CountRings(nx.Graph):
         super(CountRings, self).__init__(network)
         self.network = network
 
-    def shortest_pathlen(self, i, j):
-        s = frozenset((i,j))
-        if s in self.dist:
-            return self.dist[s]
-        d = len(nx.shortest_path(self.network, i, j)) - 1
-        self.dist[s] = d
-        return d
-        
+    #shortes_pathlen is a stateless function, so the cache is useful to avoid re-calculations.
+    @lru_cache(maxsize=None)
+    def shortest_pathlen(self, pair):
+        return len(nx.shortest_path(self.network, *pair)) - 1
 
         
     def shortcuts( self, members ):
@@ -51,7 +48,7 @@ class CountRings(nx.Graph):
         for i in range(0,n):
             for j in range(i+1,n):
                 d = min(j-i, n-(j-i))
-                if d > self.shortest_pathlen(members[i],members[j]):
+                if d > self.shortest_pathlen(frozenset((members[i],members[j]))):
                     return True
         return False
 
@@ -99,16 +96,6 @@ class CountRings(nx.Graph):
                         logger.debug("({0}) {1}".format(len(i),i))
                         yield i
                         rings.add(j)
-
-
-    def totalrings( self, maxsize ):
-        logger = logging.getLogger()
-        logger.info("totalrings() is outdated. Use rings_iter.")
-        rings = dict()
-        for ring in rings_iter( network, maxsize ):
-            s = frozenset(ring)
-            rings[s] = ring
-        return rings
         
 
 def saveRNGS( nmol, ri ):  #ri is a rings_iter
