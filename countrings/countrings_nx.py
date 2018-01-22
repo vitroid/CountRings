@@ -9,6 +9,8 @@ import logging
 import networkx as nx
 import itertools
 
+
+
 def readNGPH(file):
     logger = logging.getLogger()
     line = file.readline()
@@ -26,70 +28,87 @@ def readNGPH(file):
         network.add_edge(i,j)
 
 
-def shortcuts( network, members ):
-    n = len(members)
-    for i in range(0,n):
-        for j in range(i+1,n):
-            d = min(j-i, n-(j-i))
-            path = len(nx.shortest_path(network, members[i],members[j]))-1
-            if path < d:
-                return True
-    return False
+
+# Make a class to cache the pair distance dict
+class CountRings(nx.Graph):
+    dist = dict()
+    def __init__(self, network):
+        super(CountRings, self).__init__(network)
+        self.network = network
+
+    def shortest_pathlen(self, i, j):
+        s = frozenset((i,j))
+        if s in self.dist:
+            return self.dist[s]
+        d = len(nx.shortest_path(self.network, i, j)) - 1
+        self.dist[s] = d
+        return d
+        
+
+        
+    def shortcuts( self, members ):
+        n = len(members)
+        for i in range(0,n):
+            for j in range(i+1,n):
+                d = min(j-i, n-(j-i))
+                if d > self.shortest_pathlen(members[i],members[j]):
+                    return True
+        return False
 
 
-def findring( network, members, max ):
-    #print members, "MAX:", max
-    if len(members) > max:
-        return (max, [])
-    s = set(members)
-    last = members[-1]
-    results = []
-    for adj in network[last]:
-        if adj in s:
-            if adj == members[0]:
-                #Ring is closed.
-                #It is the best and unique answer.
-                if not shortcuts( network, members ):
-                    return (len(members), [members])
+    def findring( self, members, max ):
+        #print members, "MAX:", max
+        if len(members) > max:
+            return (max, [])
+        s = set(members)
+        last = members[-1]
+        results = []
+        for adj in self[last]:
+            if adj in s:
+                if adj == members[0]:
+                    #Ring is closed.
+                    #It is the best and unique answer.
+                    if not self.shortcuts( members ):
+                        return (len(members), [members])
+                else:
+                    #Shortcut ring
+                    pass
             else:
-                #Shortcut ring
-                pass
-        else:
-            (newmax,newres) = findring( network,members + [adj], max )
-            if newmax < max:
-                max = newmax
-                results = newres
-            elif newmax == max:
-                results += newres
-    return (max, results)
+                (newmax,newres) = self.findring( members + [adj], max )
+                if newmax < max:
+                    max = newmax
+                    results = newres
+                elif newmax == max:
+                    results += newres
+        return (max, results)
 
 
-def rings_iter( network, maxsize ):
-    logger = logging.getLogger()
-    rings = set()
-    for x in network:
-        neis = sorted(network[x])
-        for y,z in itertools.combinations(neis, 2):
-            triplet = [y,x,z]
-            (max, results) = findring( network, triplet, maxsize )
-            for i in results:
-                #Make i immutable for the key.
-                j = frozenset(i)
-                #and original list as the value.
-                if j not in rings:
-                    logger.debug("({0}) {1}".format(len(i),i))
-                    yield i
-                    rings.add(j)
+    def rings_iter( self, maxsize ):
+        logger = logging.getLogger()
+        rings = set()
+        for x in self:
+            neis = sorted(self[x])
+            for y,z in itertools.combinations(neis, 2):
+                triplet = [y,x,z]
+                (max, results) = self.findring( triplet, maxsize )
+                for i in results:
+                    #Make i immutable for the key.
+                    j = frozenset(i)
+                    #and original list as the value.
+                    if j not in rings:
+                        logger.debug("({0}) {1}".format(len(i),i))
+                        yield i
+                        rings.add(j)
 
 
-def totalrings( network, maxsize ):
-    logger = logging.getLogger()
-    logger.info("totalrings() is outdated. Use rings_iter.")
-    rings = dict()
-    for ring in rings_iter( network, maxsize ):
-        s = frozenset(ring)
-        rings[s] = ring
-    return rings
+    def totalrings( self, maxsize ):
+        logger = logging.getLogger()
+        logger.info("totalrings() is outdated. Use rings_iter.")
+        rings = dict()
+        for ring in rings_iter( network, maxsize ):
+            s = frozenset(ring)
+            rings[s] = ring
+        return rings
         
 
 def saveRNGS( nmol, ri ):  #ri is a rings_iter
@@ -109,5 +128,5 @@ if __name__ == "__main__":
         if 0 == line.find("@NGPH"):
             n, network = readNGPH(file)
             break
-    print(saveRNGS( n, rings_iter(network, 8) ))
+    print(saveRNGS( n, CountRings(network).rings_iter(8) ))
 
