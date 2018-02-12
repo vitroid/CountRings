@@ -47,7 +47,7 @@ def main():
         if line[0:5] == "@NGPH":
             (nmol,network) = cr.readNGPH(file)
             #print shortest_path(network, 0,3)
-            ri = cr.rings_iter( network, options.maxsize )
+            ri = cr.CountRings(network).rings_iter( options.maxsize )
             if options.countonly:
                 count = [0] * (options.maxsize-2)
                 for ring in ri:
