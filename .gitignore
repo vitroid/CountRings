@@ -3,4 +3,5 @@ dist/*
 *.egg-info/*
 *.pyc
 *.rst
+samples/*rngs
 c/countrings2
