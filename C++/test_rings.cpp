@@ -41,34 +41,23 @@ int main(int argc, char *argv[])
   //n.insert(0,0) = 1;
   //n.insert(2,2) = 1;
   //cout << n.outerSize() << endl;
+  DistanceMatrix(m, 5);
   int n = m.outerSize();
-  sMatrix dm(n,n);
-  int MaxDistance = 5; // assume the biggest ring to be an octagon. Internode distance in a ring should be less than 5.
-  for(int i=0;i<n; i++){
-    cerr << i << endl;
-    vector<unsigned int> Dscore = Dijkstra(m, i, MaxDistance);
-    for(int j=0;j<n;j++){
-      if (Dscore[j] != MaxDistance){
-	dm.insert(i,j) = Dscore[j];
-      }
-    }
-  }
   cerr << "DM made." << endl;
-  /*
   for(int i=0;i<n;i++){
     for(int j=0;j<n;j++){
-      int v = dm.coeff(i,j);
+      int v = m.coeff(i,j);
       cout << v;
     }
     cout << endl;
   }
-  */
+  /*
   sRings rings = countrings(m, dm, 8);
   cout << "@RNGS" << endl;
   cout << n << endl;
   showringsf(rings);
   cout << 0 << endl;
-  /*
+  
   for(sMatrix::iterator1 it1 = m.begin1(); it1 != m.end1(); ++it1) {
     for(sMatrix::iterator2 it1 = it1.begin(); it1 !=it1.end(); ++it1) {
       std::cout << "(" << it1.index1() << "," << it1.index2() << ") = " << *it1 << endl;
