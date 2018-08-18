@@ -15,10 +15,11 @@ sMatrix LoadNGPH(istream& is) {
     if (i<0)
       break;
     /*無向グラフとしてあつかう。*/
-    path.insert(i,j) = 1;
-    path.insert(j,i) = 1;
+    path.coeffRef(i,j) = 1;
+    path.coeffRef(j,i) = 1;
     //cout << i << "," << j << endl;
   }
+  cerr << "Read." << endl;
   return path;
 }
 
@@ -44,6 +45,7 @@ int main(int argc, char *argv[])
   sMatrix dm(n,n);
   int MaxDistance = 5; // assume the biggest ring to be an octagon. Internode distance in a ring should be less than 5.
   for(int i=0;i<n; i++){
+    cerr << i << endl;
     vector<unsigned int> Dscore = Dijkstra(m, i, MaxDistance);
     for(int j=0;j<n;j++){
       if (Dscore[j] != MaxDistance){
@@ -51,6 +53,7 @@ int main(int argc, char *argv[])
       }
     }
   }
+  cerr << "DM made." << endl;
   /*
   for(int i=0;i<n;i++){
     for(int j=0;j<n;j++){

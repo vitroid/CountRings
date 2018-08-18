@@ -12,6 +12,8 @@ test_dijkstra2_eigen: test_dijkstra2_eigen.o dijkstra2_eigen.o
 
 test: test_rings
 	./test_rings < ../samples/test.ngph
+test2: test_rings
+	./test_rings < /Volumes/workarea/work/bornAFP2/sfAFP.200K.ngph
 
 clean:
 	-rm *~ *.o $(TARGETS)

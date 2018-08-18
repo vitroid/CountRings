@@ -158,6 +158,7 @@ countrings(sMatrix& m, const sMatrix& dm, int maxringsize)
   assert (maxringsize <= MAXRINGSIZE);
   sRings results;
   for(int k=0; k<m.outerSize(); ++k){ //outerSize == matrix size.
+    cerr << k << endl;
     for(sMatrix::InnerIterator it1(m,k); it1; ++it1) { //nei1
       int p0 = it1.col();
       int p1 = it1.row();
