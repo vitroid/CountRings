@@ -1,37 +1,55 @@
 #include "rings.hpp"
 
-void
-DistanceMatrix(sMatrix& m,int maxpath) {
+
+void showmat(const sMatrix& m)
+{
+  int n = m.outerSize();
+  for(int i=0;i<n;i++){
+    for(int j=0;j<n;j++){
+      int v = m.coeff(i,j);
+      cout << v;
+    }
+    cout << endl;
+  }
+  cout << endl;
+}
+
+
+sMatrix
+DistanceMatrix(const sMatrix& m,int maxpath) {
   int queue[100000];
-  
-  for (int i = 0; i < m.outerSize(); i++) {
+  int n = m.outerSize();
+  sMatrix dm(m);
+  dm.reserve(VectorXi::Constant(n,300));
+  for (int p0 = 0; p0 < n; p0++) {
     //fprintf(stderr,"%d\r",i);
     int j;
-    for(sMatrix::InnerIterator it1(m,i); it1; ++it1) { //nei1
-      int k = it1.row();
-      queue[j]=k;
+    for(sMatrix::InnerIterator it1(m,p0); it1; ++it1) { //nei1
+      int p1 = it1.row();
+      queue[j]=p1;
       j++;
     }
-    cerr << j << endl;
     int head = 0;
     int tail = j;
     while (tail > head) {
-      int k = queue[head++];
-      int length = m.coeff(i,k)+1;
-      for (sMatrix::InnerIterator it1(m,k); it1; ++it1) { //nei1
-	int to = it1.row();
-	if(i!=to){
-	  int value = m.coeff(i,to);
-	  if (value==0 && length <= maxpath) {
-	    /* 新規登録 */
-	    queue[tail++] = to;
-	    m.coeffRef(i,to) = length;
-	  }else if (value > length)
-	    m.coeffRef(i,to) = length;
+      int p1 = queue[head++];
+      int length = dm.coeff(p0,p1)+1;
+      if (length>1){
+	for (sMatrix::InnerIterator it1(m,p1); it1; ++it1) { //nei1
+	  int p2 = it1.row();
+	  if(p0!=p2){
+	    int value = dm.coeff(p0,p2);
+	    if (value==0 && length <= maxpath) {
+	      queue[tail++] = p2;
+	      dm.coeffRef(p0,p2) = length;
+	    }else if (value > length)
+	      dm.coeffRef(p0,p2) = length;
+	  }
 	}
       }
     }
   }
+  return dm;
 }
 
 

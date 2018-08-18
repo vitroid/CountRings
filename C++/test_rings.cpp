@@ -9,6 +9,7 @@ sMatrix LoadNGPH(istream& is) {
   is >> n;
   /*初期化*/
   sMatrix path = sMatrix(n,n);
+  path.reserve(VectorXi::Constant(n,8));
   /*隣接関係の読みこみ。*/
   int i,j;
   while(is >> i >> j){
@@ -41,16 +42,8 @@ int main(int argc, char *argv[])
   //n.insert(0,0) = 1;
   //n.insert(2,2) = 1;
   //cout << n.outerSize() << endl;
-  DistanceMatrix(m, 5);
-  int n = m.outerSize();
-  cerr << "DM made." << endl;
-  for(int i=0;i<n;i++){
-    for(int j=0;j<n;j++){
-      int v = m.coeff(i,j);
-      cout << v;
-    }
-    cout << endl;
-  }
+  sMatrix dm = DistanceMatrix(m, 5);
+  //showmat(dm);
   /*
   sRings rings = countrings(m, dm, 8);
   cout << "@RNGS" << endl;

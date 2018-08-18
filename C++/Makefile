@@ -1,4 +1,4 @@
-CXXFLAGS=-I/usr/local/include/eigen3 -I/usr/local/Cellar/eigen/3.3.5/include/eigen3 -O -g
+CXXFLAGS=-I/usr/local/include/eigen3 -I/usr/local/Cellar/eigen/3.3.5/include/eigen3 -O -static -pg
 
 %.o: %.cpp rings.hpp
 	$(CXX) $(CXXFLAGS) -c $<
@@ -11,7 +11,8 @@ test_rings: test_rings.o rings.o
 test: test_rings
 	./test_rings < ../samples/test.ngph
 test2: test_rings
-	./test_rings < /Volumes/workarea/work/bornAFP2/sfAFP.200K.ngph
+#	./test_rings < /Volumes/workarea/work/bornAFP2/sfAFP.200K.ngph
+	time ./test_rings < ../sfAFP.200K.ngph
 
 clean:
 	-rm *~ *.o $(TARGETS)

@@ -29,8 +29,10 @@ showringsf(const sRings& rings);
 
 sRings
 countrings(sMatrix& m, const sMatrix& dm, int maxringsize);
+sMatrix
+DistanceMatrix(const sMatrix& m,int maxpath);
 void
-DistanceMatrix(sMatrix& m,int maxpath);
+showmat(const sMatrix& m);
 
 
 #endif
