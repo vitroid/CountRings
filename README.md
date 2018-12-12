@@ -12,15 +12,22 @@ Python version is clean and easy to read, while C version (in c/ directory) is t
 
 ## Algorithm
 
-1. Choose 3 successive nodes along the network.
+1. Choose 3 successive nodes (i.e. two adjacent acyclic edges) along the network. (King's criteria) [King1991]
 1. Find the smallest rings passing the three nodes.
-1. The ring must not have shotcuts, i.e. path connecting two vertices on the ring which is shorter than the path along the ring. (Using Dijkstra's algorithm.)
+1. The ring must not have shotcuts, i.e. path connecting two vertices on the ring which is shorter than the path along the ring. (Using Dijkstra's algorithm.) (Franzblau's SP ring criteria) [Franzblau1991]
 1. Put the ring in the list.
 1. Repeat 1 .. 4 until all sets of 3 successive nodes are tested.
 1. Eliminate the permutations of a ring in the list.
 1. (Optional) Remove "crossing rings".
 
-This definition would be equivalent to [Marians1990].
+So, our definition is a hybrid of the algorithms of King and Franzblau.
+
+### Note
+
+* Our definition is different from Franzblau's SP ring. Our algorithm does not count the 6-membered rings in a cubic graph but counts the geodesic 4-membered rings in a regular octahedral graph. [Franzblau1991]
+* Our definition is different from King's K ring. [King1991]
+* Our definition is different from Goetzke's strong ring. We do not care the strength. [Goetzke1991]
+* Probably somebody has already defined it. Let me know if you find that.
 
 ## Usage
 
@@ -97,4 +104,7 @@ An affordable and relevant definition of the hydogen bonds is discussed <a href=
 ## References
 
 * Downs, G. M., Gillet, V. J., Holliday, J. D. & Lynch, M. F. Review of ring perception algorithms for chemical graphs. J. Chem. Inf. Comput. Sci. 29, 172–187 (1989).
+* Franzblau, D. S. Computation of ring statistics for network models of solids. Phys. Rev. B 44, 4925–4930 (1991).
+* Goetzke, K. & Klein, H. J. Properties and efficient algorithmic determination of different classes of rings in finite and infinite polyhedral networks. J. Non-Cryst. Solids. 127, 215–220 (1991).
+* KING, S. V. Ring Configurations in a Random Network Model of Vitreous Silica. Nature 213, 1112–1113 (1967).
 * Marians, C. S. & Hobbs, L. W. Network properties of crystalline polymorphs of silica. J. Non-Cryst. Solids. 124, 242–253 (1990).
