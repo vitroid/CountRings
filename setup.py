@@ -31,7 +31,7 @@ setup(name='CountRings',
       license='MIT',
       packages=['countrings',
                 ],
-      install_requires=['networkx', ],
+      install_requires=['networkx', 'methodtools', ],
       entry_points = {
               'console_scripts': [
                   'countrings = countrings.__main__:main'

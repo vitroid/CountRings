@@ -8,7 +8,7 @@
 import logging
 import networkx as nx
 import itertools
-from functools import lru_cache
+from methodtools import lru_cache
 
 
 
@@ -38,6 +38,7 @@ class CountRings(nx.Graph):
         self.network = network
 
     #shortes_pathlen is a stateless function, so the cache is useful to avoid re-calculations.
+    # Dubious memory leak
     @lru_cache(maxsize=None)
     def shortest_pathlen(self, pair):
         return len(nx.shortest_path(self.network, *pair)) - 1
@@ -93,7 +94,7 @@ class CountRings(nx.Graph):
                     j = frozenset(i)
                     #and original list as the value.
                     if j not in rings:
-                        logger.debug("({0}) {1}".format(len(i),i))
+                        # logger.debug("({0}) {1}".format(len(i),i))
                         yield i
                         rings.add(j)
         

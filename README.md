@@ -6,10 +6,6 @@
 * It counts rings purely topologically. It does not use geometrical information.
 * Edge direction is not considered. (Undirected graph)
 
-## Implementations
-
-Python version is clean and easy to read, while C version (in c/ directory) is the fastest.
-
 ## Algorithm
 
 1. Choose 3 successive nodes (i.e. two adjacent acyclic edges) along the network. (King's criteria) [King1991]
