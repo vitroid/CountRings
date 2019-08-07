@@ -23,6 +23,7 @@ So, our definition is a hybrid of the algorithms of King and Franzblau.
 * Our definition is different from Franzblau's SP ring. Our algorithm does not count the 6-membered rings in a cubic graph but counts the geodesic 4-membered rings in a regular octahedral graph. [Franzblau1991]
 * Our definition is different from King's K ring. [King1991]
 * Our definition is different from Goetzke's strong ring. We do not care the strength. [Goetzke1991]
+* Our definition is different from that of Camisasca's. They count too much 5-membered rings. [Camisasca2019]
 * Probably somebody has already defined it. Let me know if you find that.
 
 ## Usage
@@ -99,6 +100,7 @@ An affordable and relevant definition of the hydogen bonds is discussed <a href=
 
 ## References
 
+* Camisasca, G., Schlesinger, D., Zhovtobriukh, I., Pitsevich, G. & Pettersson, L. G. M. A proposal for the structure of high- and low-density fluctuations in liquid water. J. Chem. Phys. 151, 034508 (2019).
 * Downs, G. M., Gillet, V. J., Holliday, J. D. & Lynch, M. F. Review of ring perception algorithms for chemical graphs. J. Chem. Inf. Comput. Sci. 29, 172–187 (1989).
 * Franzblau, D. S. Computation of ring statistics for network models of solids. Phys. Rev. B 44, 4925–4930 (1991).
 * Goetzke, K. & Klein, H. J. Properties and efficient algorithmic determination of different classes of rings in finite and infinite polyhedral networks. J. Non-Cryst. Solids. 127, 215–220 (1991).
