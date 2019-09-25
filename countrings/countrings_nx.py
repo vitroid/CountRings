@@ -9,7 +9,7 @@ import logging
 import networkx as nx
 import itertools
 from methodtools import lru_cache
-
+import numpy as np
 
 
 def readNGPH(file):
@@ -33,12 +33,13 @@ def readNGPH(file):
 # Make a class to cache the pair distance dict
 class CountRings(nx.Graph):
     dist = dict()
-    def __init__(self, network):
+    def __init__(self, network, pos=None):
         super(CountRings, self).__init__(network)
         self.network = network
+        self.pos = pos  # fractional coordinate in a orthogonal cell in numpy array
+
 
     #shortes_pathlen is a stateless function, so the cache is useful to avoid re-calculations.
-    # Dubious memory leak
     @lru_cache(maxsize=None)
     def shortest_pathlen(self, pair):
         return len(nx.shortest_path(self.network, *pair)) - 1
@@ -95,10 +96,21 @@ class CountRings(nx.Graph):
                     #and original list as the value.
                     if j not in rings:
                         # logger.debug("({0}) {1}".format(len(i),i))
-                        yield i
-                        rings.add(j)
-        
+                        if self.pos is None or not self.is_spanning(i):
+                            yield i
+                            rings.add(j)
 
+                            
+    def is_spanning(self, cycle):
+        sum = np.zeros_like(self.pos[cycle[0]])
+        for i in range(len(cycle)):
+            d = self.pos[cycle[i-1]] - self.pos[cycle[i]]
+            d -= np.floor(d+0.5)
+            sum += d
+        return np.any(np.absolute(sum) > 1e-5)
+            
+
+                        
 def saveRNGS( nmol, ri ):  #ri is a rings_iter
     s = "@RNGS\n"
     s += "%d\n" % nmol

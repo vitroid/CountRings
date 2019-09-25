@@ -24,7 +24,7 @@ So, our definition is a hybrid of the algorithms of King and Franzblau.
 * Our definition is different from King's K ring. [King1991]
 * Our definition is different from Goetzke's strong ring. We do not care the strength. [Goetzke1991]
 * Our definition is different from that of Camisasca's. They count too much 5-membered rings. [Camisasca2019]
-* Probably somebody has already defined it. Let me know if you find that.
+* Probably somebody has already made the same definition. Let me know if you find that.
 
 ## Usage
 

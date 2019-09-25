@@ -7,7 +7,7 @@ all:
 test-deploy: build
 	twine upload -r pypitest dist/*
 test-install:
-	pip install --index-url https://test.pypi.org/simple/ $(PKGNAME)
+	pip3 install --index-url https://test.pypi.org/simple/ $(PKGNAME)
 
 install: check
 	./setup.py install
