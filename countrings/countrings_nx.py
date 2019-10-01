@@ -34,9 +34,15 @@ def readNGPH(file):
 class CountRings(nx.Graph):
     dist = dict()
     def __init__(self, network, pos=None):
+        """
+        network: a networkx Graph(). Must not be directed.
+        pos:     fractional coordinates of nodes in a periodic parallelepiped cell. (Optional)
+                 If pos is given, cell-spanning rings will be eliminated.
+                 pos must be a numpy array.
+        """
         super(CountRings, self).__init__(network)
         self.network = network
-        self.pos = pos  # fractional coordinate in a orthogonal cell in numpy array
+        self.pos = pos
 
 
     #shortes_pathlen is a stateless function, so the cache is useful to avoid re-calculations.
