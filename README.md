@@ -1,5 +1,20 @@
 # Ring Statistics Algorithm
 
+## NOTE
+
+The codes are refactored and now included in another repository: [Cycless](https://github.com/vitroid/cycless)
+
+You can utilize the algorithm in a simpler way:
+```python
+import cycless.cycles as cy
+import networkx as nx
+
+g = nx.cubical_graph()
+
+for cycle in cy.cycles_iter(g, maxsize=6):
+    print(cycle)
+```
+
 ## Counting policy
 
 * It counts only irreducible rings (rings not having shortcut bridges).
